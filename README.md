@@ -1,6 +1,6 @@
 # Multi-tenant SaaS Starter (PERN)
 
-Boring-but-essential SaaS infrastructure: auth, multi-tenancy, RBAC, Stripe billing
+Essential SaaS infrastructure: auth, multi-tenancy, RBAC, Stripe billing
 with idempotent webhooks, and audit logging. Backend only here (Express + Postgres);
 pair with a React frontend that calls these routes.
 
