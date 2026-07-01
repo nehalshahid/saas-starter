@@ -47,5 +47,11 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({ error: err.message || 'Internal server error' });
 });
 
-const port = process.env.PORT || 4000;
-app.listen(port, () => console.log(`API listening on :${port}`));
+export default app;
+
+// Vercel imports this file as a serverless function and never calls
+// app.listen() itself — only run the local dev server outside production.
+if (process.env.NODE_ENV !== 'production') {
+  const port = process.env.PORT || 4000;
+  app.listen(port, () => console.log(`API listening on :${port}`));
+}

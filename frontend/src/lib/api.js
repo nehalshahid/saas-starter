@@ -22,7 +22,7 @@ async function refreshAccessToken() {
   const refreshToken = getStoredRefreshToken();
   if (!refreshToken) throw new Error('No refresh token');
 
-  const res = await fetch('/api/auth/refresh', {
+  const res = await fetch(`${API_BASE}/auth/refresh`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ refreshToken }),
@@ -40,8 +40,10 @@ async function refreshAccessToken() {
  * refreshes once and retries — so a brief access-token expiry never surfaces
  * as a visible error to the user, it just looks like the request was a bit slow.
  */
+const API_BASE = import.meta.env.VITE_API_URL || '/api';
+
 export async function api(path, { method = 'GET', body, retry = true } = {}) {
-  const res = await fetch(`/api${path}`, {
+  const res = await fetch(`${API_BASE}${path}`, {
     method,
     headers: {
       'Content-Type': 'application/json',
