@@ -1,11 +1,11 @@
 # Multi-tenant SaaS Starter (PERN)
 
-Boring-but-essential SaaS infrastructure: auth, multi-tenancy, RBAC, Stripe billing
+Essential SaaS infrastructure: auth, multi-tenancy, RBAC, Stripe billing
 with idempotent webhooks, and audit logging. Backend only here (Express + Postgres);
 pair with a React frontend that calls these routes.
 
 ## Stack
-Postgres, Express (Node), React (bring your own — not scaffolded here), Node.
+Postgres, Express (Node), React, Node.
 
 ## Setup
 
@@ -67,7 +67,7 @@ This is the test that actually matters for this project:
 4. Confirm you get `403 Not a member of this organization` — not a 500, not
    a silent empty array, not Org A's actual member list.
 
-```bash
+```terminal
 # as user B, trying to read org A's data
 curl -H "Authorization: Bearer $USER_B_TOKEN" \
      http://localhost:4000/api/orgs/$ORG_A_ID/members
@@ -79,7 +79,7 @@ Also worth testing: a `member`-role user hitting an `admin`-only route
 
 ## Stripe webhook testing locally
 
-```bash
+```terminal
 stripe listen --forward-to localhost:4000/api/billing/webhook
 stripe trigger checkout.session.completed
 stripe trigger checkout.session.completed   # fire twice — confirm second is logged as duplicate
