@@ -103,6 +103,37 @@ CREATE TABLE audit_logs (
   created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+
+CREATE TABLE tasks (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  org_id      UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+  created_by  UUID NOT NULL REFERENCES users(id),
+  title       TEXT NOT NULL,
+  description TEXT,
+  status      TEXT NOT NULL DEFAULT 'open', -- open | in_progress | done
+  due_date    TIMESTAMPTZ,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE task_assignees (
+  task_id     UUID NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
+  user_id     UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  PRIMARY KEY (task_id, user_id)
+);
+
+CREATE TABLE task_responses (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  task_id     UUID NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
+  user_id     UUID NOT NULL REFERENCES users(id),
+  body        TEXT NOT NULL,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX idx_tasks_org ON tasks(org_id);
+CREATE INDEX idx_task_assignees_user ON task_assignees(user_id);
+CREATE INDEX idx_task_responses_task ON task_responses(task_id);
+
 CREATE INDEX idx_memberships_org ON memberships(org_id);
 CREATE INDEX idx_memberships_user ON memberships(user_id);
 CREATE INDEX idx_audit_logs_org_created ON audit_logs(org_id, created_at DESC);

@@ -61,6 +61,18 @@ router.get('/:orgId', requireOrgRole('member'), async (req, res) => {
   res.json({ organization: rows[0] });
 });
 
+// Rename org — owner only.
+router.patch('/:orgId', requireOrgRole('owner'), async (req, res) => {
+  const { name } = req.body;
+  if (!name?.trim()) return res.status(400).json({ error: 'Name is required' });
+  const { rows } = await query(
+    'UPDATE organizations SET name = $1 WHERE id = $2 RETURNING id, name, slug',
+    [name.trim(), req.params.orgId]
+  );
+  await recordAudit({ orgId: req.params.orgId, actorId: req.user.id, action: 'org.renamed', metadata: { name } });
+  res.json({ organization: rows[0] });
+});
+
 // List members (any member can see the roster).
 router.get('/:orgId/members', requireOrgRole('member'), async (req, res) => {
   const { rows } = await query(

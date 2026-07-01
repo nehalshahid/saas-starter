@@ -7,6 +7,7 @@ import rateLimit from 'express-rate-limit';
 import authRoutes from './routes/auth.js';
 import orgRoutes from './routes/orgs.js';
 import billingRoutes, { stripeWebhookHandler } from './routes/billing.js';
+import tasksRoutes from './routes/tasks.js';
 
 dotenv.config();
 const app = express();
@@ -35,6 +36,7 @@ app.use('/api/auth/forgot-password', authLimiter);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/orgs', orgRoutes);
+app.use('/api/orgs', tasksRoutes);
 app.use('/api/billing', billingRoutes); // non-webhook billing routes (checkout, portal, subscription GET)
 
 app.get('/health', (req, res) => res.json({ ok: true }));

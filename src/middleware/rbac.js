@@ -20,7 +20,7 @@ const ROLE_RANK = { member: 1, admin: 2, owner: 3 };
 export function requireOrgRole(minRole = 'member') {
   return async function (req, res, next) {
     const orgId = req.params.orgId;
-    if (!orgId) return res.status(400).json({ error: 'Missing orgId in route' });
+    if (!orgId) return res.status(400).json({ error: 'Missing org Id in route' });
 
     const { rows } = await query(
       'SELECT role FROM memberships WHERE user_id = $1 AND org_id = $2',
